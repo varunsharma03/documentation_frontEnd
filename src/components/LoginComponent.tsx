@@ -13,12 +13,14 @@ type LoginProps = {
   setUsername: (value: string) => void;
   setPassword: (value: string) => void;
   onSubmit: () => void;
+  children?: React.ReactNode
 };
 
 const LoginComponent: React.FC<LoginProps> = ({
   setUsername = () => { },
   setPassword = () => { },
   onSubmit = () => { },
+  children
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
@@ -43,8 +45,10 @@ const LoginComponent: React.FC<LoginProps> = ({
           textAlign: "center",
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Login
+        <Typography variant="h4"
+          gutterBottom
+          sx={{ fontWeight: "bold", color: "#333" }}>
+          Login to start
         </Typography>
         <TextField
           fullWidth
@@ -76,11 +80,12 @@ const LoginComponent: React.FC<LoginProps> = ({
           variant="contained"
           color="primary"
           fullWidth
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, mb: 1 }}
           onClick={onSubmit}
         >
           Login
         </Button>
+        {children}
       </Paper>
     </Box>
   );

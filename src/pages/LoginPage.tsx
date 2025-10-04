@@ -2,11 +2,12 @@ import { useState } from "react";
 import LoginComponent from "../components/LoginComponent";
 import { Button, Typography } from "@mui/material";
 import LoginWithGoogle from "../components/LoginWithGoogle";
+import SignupComponent from "../components/SignUpComponent";
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState<number | null>(null);
+  const [showSignComp, setShowSignUpComp] = useState(false)
 
   const handleLoginWithPassword = async () => {
     try {
@@ -21,72 +22,40 @@ const LoginPage = () => {
     console.log(token)
   }
 
-  const methods = [
-    {
-      name: "Login with password",
-      component: (
-        <LoginComponent
-          setPassword={setPassword}
-          setUsername={setUsername}
-          onSubmit={handleLoginWithPassword}
-        />
-      ),
-      key: 123,
-    },
-    {
-      name: "Login with Google",
-      component: <LoginWithGoogle onSubmit={handleGoogleAuthLogin} />,
-      key: 124,
-    },
-  ];
+  const handleSignUp = async () => {
+    try {
+      console.log('From SignUp ')
+      console.log(username);
+      console.log(password)
+    } catch (error: unknown) {
+      console.log(error, 'error')
+    }
+  }
 
-  const selected = methods.find((item) => item.key === selectedMethod);
+
+
 
   return (
     <div>
-      {!selected &&
+      {
         <>
-          <Typography variant="h4" gutterBottom>
-            Welcome To Documentation
-          </Typography>
-          {methods.map((item) => (
-            <div
-              key={item.key}
-              style={{
-                cursor: "pointer",
-                padding: "10px",
-                backgroundColor: selectedMethod === item.key ? "#eee" : "#fff",
-                border: "1px solid #ccc",
-                marginBottom: "10px",
-              }}
-            >
+          {!showSignComp &&
+            <LoginComponent setPassword={setPassword} setUsername={setUsername} onSubmit={handleLoginWithPassword} >
+              <Button variant="contained" color="primary" fullWidth sx={{ mb: 2 }} onClick={() => setShowSignUpComp(true)}>Sign Up</Button>
+              <LoginWithGoogle onSubmit={handleGoogleAuthLogin} />
+            </LoginComponent >}
 
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
-                onClick={() => setSelectedMethod(item.key)}
-              >
-                {item.name}
-              </Button>
-            </div>
-          ))}
-        </>
-      }
+          {showSignComp &&
+            <SignupComponent setPassword={setPassword} setUsername={setUsername} onSubmit={handleSignUp} >
+              <Typography variant="body2" sx={{ color: "gray", mb: 2 }} onClick={() => setShowSignUpComp(false)}>
+                Already have an account? <span style={{
+                  cursor: "pointer", font: "bold", color: "#1976d2",
+                  textDecoration: "underline",
+                }} >Login</span>
+              </Typography>
+            </SignupComponent>
+          }
 
-      {selected &&
-        <>
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ mt: 2 }}
-            onClick={() => setSelectedMethod(null)}
-          >
-            Back
-          </Button>
-          <div>{selected.component}</div>
         </>
       }
 
